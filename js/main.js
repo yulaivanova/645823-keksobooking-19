@@ -67,7 +67,7 @@ var renderPin = function (pin) {
   var pinElement = mapPinTemplate.cloneNode(true);
   var mapPinImage = pinElement.querySelector('img');
 
-  var pinX = pin.location.x + PIN_WIDTH / 2;
+  var pinX = pin.location.x - PIN_WIDTH / 2;
   var pinY = pin.location.y - PIN_HEIGHT / 2;
 
   pinElement.style = 'left: ' + pinX + 'px; top: ' + pinY + 'px;';
