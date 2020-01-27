@@ -27,14 +27,24 @@ var getRandomArrayElement = function (arr) {
   return arr[Math.floor(Math.random() * arr.length)];
 };
 
+var createLocation = function () {
+  var location = {
+    x: getRandomIntInclusive(0, MAP_WIDTH - PIN_WIDTH),
+    y: getRandomIntInclusive(MAP_TOP_Y, MAP_BOTTOM_Y),
+  };
+  return location;
+};
+
 var createPin = function (pinNumber) {
+  var location = createLocation();
+
   var pin = {
     author: {
       avatar: 'img/avatars/user0' + (pinNumber + 1) + '.png',
     },
     offer: {
       title: 'Объявление',
-      addres: 'location.' + getRandomIntInclusive(100, 900) + 'location.' + getRandomIntInclusive(100, 900),
+      addres: location.x + ', ' + location.y,
       price: getRandomIntInclusive(100, 9000),
       type: getRandomArrayElement(HOUSING_TYPE),
       rooms: getRandomIntInclusive(1, 10),
@@ -45,10 +55,7 @@ var createPin = function (pinNumber) {
       description: 'описание',
       photos: getRandomArrayElement(PHOTOS),
     },
-    location: {
-      x: getRandomIntInclusive(0, MAP_WIDTH - PIN_WIDTH),
-      y: getRandomIntInclusive(MAP_TOP_Y, MAP_BOTTOM_Y),
-    }
+    location: location,
   };
   return pin;
 };
@@ -77,13 +84,14 @@ var renderPin = function (pin) {
   return pinElement;
 };
 
-var fragment = document.createDocumentFragment();
-for (var i = 0; i < pins.length; i++) {
-  fragment.appendChild(renderPin(pins[i]));
-}
+var renderPinsArray = function (arr) {
+  var fragment = document.createDocumentFragment();
+  for (var i = 0; i < arr.length; i++) {
+    fragment.appendChild(renderPin(arr[i]));
+  }
+  return fragment;
+};
 
-mapPinsList.appendChild(fragment);
+mapPinsList.appendChild(renderPinsArray(pins));
 
 map.classList.remove('map--faded');
-
-
