@@ -10,6 +10,11 @@ var PIN_HEIGHT = 70;
 var MAP_WIDTH = 1200;
 var MAP_TOP_Y = 130;
 var MAP_BOTTOM_Y = 630;
+var PIN_QUANTITY = 8;
+var MIN_PRICE = 100;
+var MAX_PRICE = 99000;
+var ROOMS = ['1', '2', '3'];
+var GUEST = ['0', '1', '2'];
 
 var map = document.querySelector('.map');
 var mapPinsList = map.querySelector('.map__pins');
@@ -23,14 +28,14 @@ var getRandomIntInclusive = function (min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 };
 
-var getRandomArrayElement = function (arr) {
-  return arr[Math.floor(Math.random() * arr.length)];
+var getRandomElements = function (elements) {
+  return elements[getRandomIntInclusive(0, elements.length - 1)];
 };
 
 var createLocation = function () {
   var location = {
-    x: getRandomIntInclusive(0, MAP_WIDTH - PIN_WIDTH),
-    y: getRandomIntInclusive(MAP_TOP_Y, MAP_BOTTOM_Y),
+    x: getRandomIntInclusive(PIN_WIDTH / 2, MAP_WIDTH - PIN_WIDTH),
+    y: getRandomIntInclusive(MAP_TOP_Y + PIN_HEIGHT, MAP_BOTTOM_Y),
   };
   return location;
 };
@@ -45,22 +50,22 @@ var createPin = function (pinNumber) {
     offer: {
       title: 'Объявление',
       addres: location.x + ', ' + location.y,
-      price: getRandomIntInclusive(100, 9000),
-      type: getRandomArrayElement(HOUSING_TYPE),
-      rooms: getRandomIntInclusive(1, 10),
-      guests: getRandomIntInclusive(1, 20),
-      checkin: getRandomArrayElement(CHECKIN_TIME),
-      checkout: getRandomArrayElement(CHECKOUT_TIME),
-      features: getRandomArrayElement(FEATURES),
+      price: getRandomIntInclusive(MIN_PRICE, MAX_PRICE),
+      type: getRandomElements(HOUSING_TYPE),
+      rooms: getRandomElements(ROOMS),
+      guests: getRandomElements(GUEST),
+      checkin: getRandomElements(CHECKIN_TIME),
+      checkout: getRandomElements(CHECKOUT_TIME),
+      features: getRandomElements(FEATURES),
       description: 'описание',
-      photos: getRandomArrayElement(PHOTOS),
+      photos: getRandomElements(PHOTOS),
     },
     location: location,
   };
   return pin;
 };
 
-var createPinsArray = function (quantity) {
+var createPins = function (quantity) {
   var arr = [];
   for (var i = 0; i < quantity; i++) {
     arr.push(createPin(i));
@@ -68,30 +73,31 @@ var createPinsArray = function (quantity) {
   return arr;
 };
 
-var pins = createPinsArray(8);
+var pins = createPins(PIN_QUANTITY);
 
 var renderPin = function (pin) {
   var pinElement = mapPinTemplate.cloneNode(true);
   var mapPinImage = pinElement.querySelector('img');
 
   var pinX = pin.location.x - PIN_WIDTH / 2;
-  var pinY = pin.location.y - PIN_HEIGHT / 2;
+  var pinY = pin.location.y - PIN_HEIGHT;
 
-  pinElement.style = 'left: ' + pinX + 'px; top: ' + pinY + 'px;';
+  pinElement.style.left = pinX + 'px';
+  pinElement.style.top = pinY + 'px';
   mapPinImage.src = pin.author.avatar;
   mapPinImage.alt = pin.offer.title;
 
   return pinElement;
 };
 
-var renderPinsArray = function (arr) {
+var renderPins = function (pinsArr) {
   var fragment = document.createDocumentFragment();
-  for (var i = 0; i < arr.length; i++) {
-    fragment.appendChild(renderPin(arr[i]));
+  for (var i = 0; i < pinsArr.length; i++) {
+    fragment.appendChild(renderPin(pinsArr[i]));
   }
   return fragment;
 };
 
-mapPinsList.appendChild(renderPinsArray(pins));
-
 map.classList.remove('map--faded');
+
+mapPinsList.appendChild(renderPins(pins));
