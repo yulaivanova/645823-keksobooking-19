@@ -1,6 +1,11 @@
 'use strict';
 
-var HOUSING_TYPE = ['palace', 'flat', 'house', 'bungalo'];
+var HOUSE_TYPE = {
+  flat: 'Квартира',
+  bungalo: 'Бунгало',
+  palace: 'Дворец',
+  house: 'Дом',
+};
 var CHECKIN_TIME = ['12:00', '13:00', '14:00'];
 var CHECKOUT_TIME = ['12:00', '13:00', '14:00'];
 var FEATURES = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
@@ -14,7 +19,7 @@ var PIN_QUANTITY = 8;
 var MIN_PRICE = 100;
 var MAX_PRICE = 99000;
 var ROOMS = ['1', '2', '3'];
-var GUEST = ['0', '1', '2'];
+var GUEST = ['1', '2'];
 
 var map = document.querySelector('.map');
 var mapPinsList = map.querySelector('.map__pins');
@@ -46,21 +51,21 @@ var createLocation = function () {
   return location;
 };
 
-var getCorrectHousingType = function (obj) {
-  var correctType = '';
-  if (obj.offer.type === 'flat') {
-    correctType = 'Квартира';
-  }
-  if (obj.offer.type === 'bungalo') {
-    correctType = 'Бунгало';
-  }
-  if (obj.offer.type === 'palace') {
-    correctType = 'Дворец';
-  }
-  if (obj.offer.type === 'house') {
-    correctType = 'Дом';
-  }
-  return correctType;
+var getPinTypeText = function (pin) {
+  return HOUSE_TYPE[pin.offer.type];
+};
+
+var declension = function (number, words) {
+  var cases = [2, 0, 1, 1, 1, 2];
+  return words[
+    number % 100 > 4 && number % 100 < 20
+      ? 2
+      : cases[
+        number % 10 < 5
+          ? number % 10
+          : 5
+      ]
+  ];
 };
 
 var createPin = function (pinNumber) {
@@ -74,7 +79,7 @@ var createPin = function (pinNumber) {
       title: 'Объявление',
       addres: location.x + ', ' + location.y,
       price: getRandomIntInclusive(MIN_PRICE, MAX_PRICE),
-      type: getRandomElements(HOUSING_TYPE),
+      type: getRandomElements(Object.keys(HOUSE_TYPE)),
       rooms: getRandomElements(ROOMS),
       guests: getRandomElements(GUEST),
       checkin: getRandomElements(CHECKIN_TIME),
@@ -119,22 +124,8 @@ var createPinCardElement = function (pin) {
   cardElement.querySelector('.popup__title').textContent = pin.offer.title;
   cardElement.querySelector('.popup__text--address').textContent = pin.offer.addres;
   cardElement.querySelector('.popup__text--price').textContent = pin.offer.price + '₽/ночь';
-
-  cardElement.querySelector('.popup__type').textContent = getCorrectHousingType(pin);
-
-  var roomsText = 'ы';
-  if (pin.offer.rooms < 2) {
-    roomsText = 'а';
-  } else if (pin.offer.rooms > 4) {
-    roomsText = '';
-  }
-
-  var guestsText = 'ей';
-  if (pin.offer.guests < 2) {
-    guestsText = 'я';
-  }
-
-  cardElement.querySelector('.popup__text--capacity').textContent = pin.offer.rooms + ' комнат' + roomsText + ' для ' + pin.offer.guests + ' гост' + guestsText;
+  cardElement.querySelector('.popup__type').textContent = getPinTypeText(pin);
+  cardElement.querySelector('.popup__text--capacity').textContent = pin.offer.rooms + ' ' + declension(pin.offer.rooms, ['комната', 'комнаты', 'комнат']) + ' для ' + pin.offer.guests + ' ' + declension(pin.offer.guests, ['гостя', 'гостей']);
   cardElement.querySelector('.popup__text--time').textContent = 'Заезд после ' + pin.offer.checkin + ', выезд до ' + pin.offer.checkout;
   cardElement.querySelector('.popup__features').textContent = pin.offer.features;
   cardElement.querySelector('.popup__description').textContent = pin.offer.description;
@@ -153,9 +144,7 @@ var renderPins = function (pins) {
 };
 
 var renderPinCard = function (pin) {
-  var fragment = document.createDocumentFragment();
-  fragment.appendChild(createPinCardElement(pin));
-  map.insertBefore(fragment, mapFilters);
+  map.insertBefore(createPinCardElement(pin), mapFilters);
 };
 
 renderPins(generatedPins);
