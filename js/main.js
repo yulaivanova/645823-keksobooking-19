@@ -55,6 +55,7 @@ var getPinTypeText = function (pin) {
   return HOUSE_TYPE[pin.offer.type];
 };
 
+
 var declension = function (number, words) {
   var cases = [2, 0, 1, 1, 1, 2];
   return words[
@@ -66,6 +67,16 @@ var declension = function (number, words) {
           : 5
       ]
   ];
+};
+
+var getPinCapacityText = function (pin) {
+  var rooms = pin.offer.rooms + ' ' + declension(pin.offer.rooms, ['комната', 'комнаты', 'комнат']);
+  var guests = pin.offer.guests + ' ' + declension(pin.offer.guests, ['гостя', 'гостей']);
+  return rooms + ' для ' + guests;
+};
+
+var getPinTimeText = function (pin) {
+  return 'Заезд после ' + pin.offer.checkin + ', выезд до ' + pin.offer.checkout;
 };
 
 var createPin = function (pinNumber) {
@@ -125,8 +136,8 @@ var createPinCardElement = function (pin) {
   cardElement.querySelector('.popup__text--address').textContent = pin.offer.addres;
   cardElement.querySelector('.popup__text--price').textContent = pin.offer.price + '₽/ночь';
   cardElement.querySelector('.popup__type').textContent = getPinTypeText(pin);
-  cardElement.querySelector('.popup__text--capacity').textContent = pin.offer.rooms + ' ' + declension(pin.offer.rooms, ['комната', 'комнаты', 'комнат']) + ' для ' + pin.offer.guests + ' ' + declension(pin.offer.guests, ['гостя', 'гостей']);
-  cardElement.querySelector('.popup__text--time').textContent = 'Заезд после ' + pin.offer.checkin + ', выезд до ' + pin.offer.checkout;
+  cardElement.querySelector('.popup__text--capacity').textContent = getPinCapacityText(pin);
+  cardElement.querySelector('.popup__text--time').textContent = getPinTimeText(pin);
   cardElement.querySelector('.popup__features').textContent = pin.offer.features;
   cardElement.querySelector('.popup__description').textContent = pin.offer.description;
   cardElement.querySelector('.popup__photos').querySelector('.popup__photo').src = pin.offer.photos;
