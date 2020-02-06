@@ -21,10 +21,9 @@ var MAX_PRICE = 99000;
 var ROOMS = ['1', '2', '3'];
 var GUEST = ['1', '2'];
 var KEY_ENTER = 'Enter';
-
-var pinMapMainWidth = 65;
-var pinMapMainHeight = 65;
-var pinMainMapArrow = 16;
+var PIN_MAIN_WIDTH = 65;
+var PIN_MAIN_HEIGHT = 65;
+var PIN_MAIN_ARROW = 16;
 
 var map = document.querySelector('.map');
 var mapPinsList = map.querySelector('.map__pins');
@@ -94,33 +93,25 @@ var getPinTimeText = function (pin) {
   return 'Заезд после ' + pin.offer.checkin + ', выезд до ' + pin.offer.checkout;
 };
 
-var disableFormElements = function (formElements) {
+var toogleFormElements = function (formElements, state) {
   for (var i = 0; i < formElements.length; i++) {
-    formElements[i].disabled = true;
-  }
-};
-
-var enableFormElements = function (formElements) {
-  for (var i = 0; i < formElements.length; i++) {
-    formElements[i].disabled = false;
+    formElements[i].disabled = state;
   }
 };
 
 var makePageActive = function () {
   map.classList.remove('map--faded');
   adForm.classList.remove('ad-form--disabled');
-  enableFormElements(mapFormInputs);
-  enableFormElements(mapFormSelects);
-  enableFormElements(adFormFieldsets);
-  adFromAddressInput.value = getPinMapMainAddres(true);
+  toogleFormElements(mapFormInputs, false);
+  toogleFormElements(mapFormSelects, false);
+  toogleFormElements(adFormFieldsets, false);
+  updateAddressInput(adFromAddressInput, true);
   renderPins(generatedPins);
   renderPinCard(generatedPins[0]);
 };
 
-mapPinMain.addEventListener('mousedown', function (evt) {
-  if (evt.which === 1) {
-    makePageActive();
-  }
+mapPinMain.addEventListener('click', function () {
+  makePageActive();
 });
 
 mapPinMain.addEventListener('keydown', function (evt) {
@@ -129,23 +120,33 @@ mapPinMain.addEventListener('keydown', function (evt) {
   }
 });
 
-var getPinMapMainAddres = function (isActive) {
-  var addres = '';
+var getPinMainX = function () {
   var addresX = parseInt(mapPinMain.style.left, 10);
+  return addresX + PIN_MAIN_WIDTH / 2;
+};
+
+var getPinMainY = function (isActive) {
   var addresY = parseInt(mapPinMain.style.top, 10);
   if (isActive) {
-    addres = (addresX + pinMapMainWidth / 2) + ', ' + (pinMapMainHeight + addresY + pinMainMapArrow);
+    return PIN_MAIN_HEIGHT + addresY + PIN_MAIN_ARROW;
   } else {
-    addres = (addresX + pinMapMainWidth / 2) + ', ' + (pinMapMainHeight / 2 + addresY);
+    return PIN_MAIN_HEIGHT / 2 + addresY;
   }
-  return addres;
+};
+
+var updateAddressInput = function (addressInput, isActive) {
+  var addres = getPinMainX() + ', ' + getPinMainY(isActive);
+  addressInput.value = addres;
+  return addressInput.value;
 };
 
 var getMessageValidityCapacity = function () {
-  var roomNumber = adFormRoomNumber.value;
-  var capacity = adFormCapacity.value;
-  if (roomNumber >= capacity) {
+  var roomNumber = parseInt(adFormRoomNumber.value, 10);
+  var capacity = parseInt(adFormCapacity.value, 10);
+  if ((roomNumber >= capacity && roomNumber !== 100) || (roomNumber === 100 && capacity === 0)) {
     return '';
+  } else if (roomNumber === 100 && capacity !== 0) {
+    return 'Для такого количества гостей вы должны выбрать менее ' + capacity + ' комнат';
   } else {
     return 'Для такого количества гостей вы должны выбрать не менее ' + capacity + ' комнат';
   }
@@ -234,10 +235,10 @@ var renderPinCard = function (pin) {
   map.insertBefore(createPinCardElement(pin), mapFilters);
 };
 
-disableFormElements(mapFormInputs);
-disableFormElements(mapFormSelects);
-disableFormElements(adFormFieldsets);
+toogleFormElements(mapFormInputs, true);
+toogleFormElements(mapFormSelects, true);
+toogleFormElements(adFormFieldsets, true);
 
-adFromAddressInput.value = getPinMapMainAddres(false);
+updateAddressInput(adFromAddressInput, false);
 
 
