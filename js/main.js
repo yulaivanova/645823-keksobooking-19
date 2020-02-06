@@ -35,6 +35,8 @@ var mapCardTemplate = document.querySelector('#card')
     .content
     .querySelector('.map__card');
 
+var photoCardTemplate = mapCardTemplate.querySelector('.popup__photo');
+
 var mapFilters = document.querySelector('.map__filters-container');
 var adForm = document.querySelector('.ad-form');
 var mapFiltersContainer = map.querySelector('.map__filters-container');
@@ -174,7 +176,7 @@ var createPin = function (pinNumber) {
       checkout: getRandomElements(CHECKOUT_TIME),
       features: getRandomElements(FEATURES),
       description: 'описание',
-      photos: getRandomElements(PHOTOS),
+      photos: PHOTOS,
     },
     location: location,
   };
@@ -217,7 +219,8 @@ var createPinCardElement = function (pin) {
   cardElement.querySelector('.popup__text--time').textContent = getPinTimeText(pin);
   cardElement.querySelector('.popup__features').textContent = pin.offer.features;
   cardElement.querySelector('.popup__description').textContent = pin.offer.description;
-  cardElement.querySelector('.popup__photos').querySelector('.popup__photo').src = pin.offer.photos;
+  cardElement.querySelector('.popup__photos').innerHTML = '';
+  cardElement.querySelector('.popup__photos').appendChild(createPhotosPinCard(pin));
   cardElement.querySelector('.popup__avatar').src = pin.author.avatar;
 
   return cardElement;
@@ -231,6 +234,16 @@ var renderPins = function (pins) {
   mapPinsList.appendChild(fragment);
 };
 
+var createPhotosPinCard = function (pin) {
+  var photosFragment = document.createDocumentFragment();
+
+  for (var i = 0; i < pin.offer.photos.length; i++) {
+    var photoElement = photoCardTemplate.cloneNode(true);
+    photoElement.src = pin.offer.photos[i];
+    photosFragment.appendChild(photoElement);
+  }
+  return photosFragment;
+};
 var renderPinCard = function (pin) {
   map.insertBefore(createPinCardElement(pin), mapFilters);
 };
