@@ -13,7 +13,6 @@
     .querySelector('.map__card');
 
   var photoCardTemplate = mapCardTemplate.querySelector('.popup__photo');
-  var featuresCardTemplate = mapCardTemplate.querySelector('.popup__feature ');
 
   var getPinTypeText = function (pin) {
     return HOUSE_TYPE[pin.offer.type];
@@ -24,21 +23,20 @@
   };
 
   var getPinCapacityText = function (pin) {
-    var rooms = pin.offer.rooms + ' ' + window.declension(pin.offer.rooms, ['комната', 'комнаты', 'комнат']);
-    var guests = pin.offer.guests + ' ' + window.declension(pin.offer.guests, ['гостя', 'гостей']);
+    var rooms = pin.offer.rooms + ' ' + window.util.declension(pin.offer.rooms, ['комната', 'комнаты', 'комнат']);
+    var guests = pin.offer.guests + ' ' + window.util.declension(pin.offer.guests, ['гостя', 'гостей']);
     return rooms + ' для ' + guests;
   };
 
   var createFeaturesPinCard = function (pin) {
     var featuresFragment = document.createDocumentFragment();
-    featuresCardTemplate.classList.remove('popup__feature--wifi');
 
     for (var i = 0; i < pin.offer.features.length; i++) {
-      var featureElement = featuresCardTemplate.cloneNode(true);
+      var featureElement = document.createElement('li');
+      featureElement.classList.add('popup__feature');
       featureElement.classList.add('popup__feature--' + pin.offer.features[i]);
       featuresFragment.appendChild(featureElement);
     }
-
     return featuresFragment;
   };
 
@@ -62,7 +60,6 @@
     cardElement.querySelector('.popup__type').textContent = getPinTypeText(pin);
     cardElement.querySelector('.popup__text--capacity').textContent = getPinCapacityText(pin);
     cardElement.querySelector('.popup__text--time').textContent = getPinTimeText(pin);
-    cardElement.querySelector('.popup__features').innerHTML = '';
     cardElement.querySelector('.popup__features').appendChild(createFeaturesPinCard(pin));
     cardElement.querySelector('.popup__description').textContent = pin.offer.description;
     cardElement.querySelector('.popup__photos').innerHTML = '';

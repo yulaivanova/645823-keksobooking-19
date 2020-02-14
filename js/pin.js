@@ -27,8 +27,8 @@
 
   var createLocation = function () {
     var location = {
-      x: window.randomization.getRandomIntInclusive(PIN_WIDTH / 2, MAP_WIDTH - PIN_WIDTH),
-      y: window.randomization.getRandomIntInclusive(MAP_TOP_Y + PIN_HEIGHT, MAP_BOTTOM_Y),
+      x: window.util.getRandomIntInclusive(PIN_WIDTH / 2, MAP_WIDTH - PIN_WIDTH),
+      y: window.util.getRandomIntInclusive(MAP_TOP_Y + PIN_HEIGHT, MAP_BOTTOM_Y),
     };
     return location;
   };
@@ -43,12 +43,12 @@
       offer: {
         title: 'Объявление',
         addres: location.x + ', ' + location.y,
-        price: window.randomization.getRandomIntInclusive(MIN_PRICE, MAX_PRICE),
-        type: window.randomization.getRandomElements(Object.keys(HOUSE_TYPE)),
-        rooms: window.randomization.getRandomElements(ROOMS),
-        guests: window.randomization.getRandomElements(GUEST),
-        checkin: window.randomization.getRandomElements(CHECKIN_TIME),
-        checkout: window.randomization.getRandomElements(CHECKOUT_TIME),
+        price: window.util.getRandomIntInclusive(MIN_PRICE, MAX_PRICE),
+        type: window.util.getRandomElement(Object.keys(HOUSE_TYPE)),
+        rooms: window.util.getRandomElement(ROOMS),
+        guests: window.util.getRandomElement(GUEST),
+        checkin: window.util.getRandomElement(CHECKIN_TIME),
+        checkout: window.util.getRandomElement(CHECKOUT_TIME),
         features: FEATURES,
         description: 'описание',
         photos: PHOTOS,
