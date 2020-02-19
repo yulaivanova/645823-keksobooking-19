@@ -1,7 +1,6 @@
 'use strict';
 
 (function () {
-
   var MIN_Y = 130;
   var MAX_Y = 630;
   var KEY_ENTER = 'Enter';

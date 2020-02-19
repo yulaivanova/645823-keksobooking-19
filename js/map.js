@@ -1,17 +1,12 @@
 'use strict';
 
 (function () {
-
-  // var PIN_QUANTITY = 8;
-
   var map = document.querySelector('.map');
   var mapPinsList = map.querySelector('.map__pins');
   var adForm = document.querySelector('.ad-form');
   var mapFiltersContainer = map.querySelector('.map__filters-container');
   var mapFormInputs = mapFiltersContainer.querySelectorAll('.map__filters-container input');
   var mapFormSelects = mapFiltersContainer.querySelectorAll('.map__filters-container select');
-
-  // var generatedPins = window.pin.createElements(PIN_QUANTITY);
 
   var renderPins = function (pins) {
     var fragment = document.createDocumentFragment();

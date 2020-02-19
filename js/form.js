@@ -1,7 +1,6 @@
 'use strict';
 
 (function () {
-
   var adForm = document.querySelector('.ad-form');
   var adFormRoomNumber = adForm.querySelector('#room_number');
   var adFormCapacity = adForm.querySelector('#capacity');
