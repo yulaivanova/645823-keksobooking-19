@@ -1,6 +1,7 @@
 'use strict';
 
 (function () {
+  var ESC_KEY = 'Escape';
   var HOUSE_TYPE = {
     flat: 'Квартира',
     bungalo: 'Бунгало',
@@ -13,6 +14,11 @@
     .querySelector('.map__card');
 
   var photoCardTemplate = mapCardTemplate.querySelector('.popup__photo');
+  var mapFilters = document.querySelector('.map__filters-container');
+  var map = document.querySelector('.map');
+
+  var pinCardElement = null;
+
 
   var getPinTypeText = function (pin) {
     return HOUSE_TYPE[pin.offer.type];
@@ -31,23 +37,25 @@
   var createFeaturesPinCard = function (pin) {
     var featuresFragment = document.createDocumentFragment();
 
-    for (var i = 0; i < pin.offer.features.length; i++) {
+    pin.offer.features.forEach(function (feature) {
       var featureElement = document.createElement('li');
       featureElement.classList.add('popup__feature');
-      featureElement.classList.add('popup__feature--' + pin.offer.features[i]);
+      featureElement.classList.add('popup__feature--' + feature);
       featuresFragment.appendChild(featureElement);
-    }
+    });
+
     return featuresFragment;
   };
 
   var createPhotosPinCard = function (pin) {
     var photosFragment = document.createDocumentFragment();
 
-    for (var i = 0; i < pin.offer.photos.length; i++) {
+    pin.offer.photos.forEach(function (photo) {
       var photoElement = photoCardTemplate.cloneNode(true);
-      photoElement.src = pin.offer.photos[i];
+      photoElement.src = photo;
       photosFragment.appendChild(photoElement);
-    }
+    });
+
     return photosFragment;
   };
 
@@ -69,8 +77,35 @@
     return cardElement;
   };
 
+  var onPinCardEscPress = function (evt) {
+    if (evt.key === ESC_KEY) {
+      closePinCard();
+    }
+  };
+
+  var closePinCard = function () {
+    if (pinCardElement) {
+      pinCardElement.remove();
+      document.removeEventListener('keydown', onPinCardEscPress);
+    }
+  };
+
+  var renderPinCard = function (pin) {
+    closePinCard();
+    pinCardElement = window.pinCard.createElement(pin);
+    map.insertBefore(pinCardElement, mapFilters);
+
+    var pinCardCloseButton = map.querySelector('.popup__close');
+    pinCardCloseButton.addEventListener('click', function () {
+      closePinCard();
+    });
+
+    document.addEventListener('keydown', onPinCardEscPress);
+  };
+
   window.pinCard = {
     createElement: createPinCardElement,
+    renderElement: renderPinCard,
   };
 
 })();

@@ -1,6 +1,10 @@
 'use strict';
 
 (function () {
+  var PIN_MAIN_WIDTH = 65;
+  var PIN_MAIN_HEIGHT = 65;
+  var PIN_MAIN_ARROW = 16;
+
   var declension = function (number, words) {
     var cases = [2, 0, 1, 1, 1, 2];
     return words[
@@ -24,10 +28,24 @@
     return elements[getRandomIntInclusive(0, elements.length - 1)];
   };
 
+  var getPinX = function (left) {
+    return left + PIN_MAIN_WIDTH / 2;
+  };
+
+  var getPinY = function (top, isActive) {
+    if (isActive) {
+      return PIN_MAIN_HEIGHT + top + PIN_MAIN_ARROW;
+    } else {
+      return PIN_MAIN_HEIGHT / 2 + top;
+    }
+  };
+
   window.util = {
     declension: declension,
     getRandomIntInclusive: getRandomIntInclusive,
     getRandomElement: getRandomElement,
+    getPinX: getPinX,
+    getPinY: getPinY,
   };
 
 })();
