@@ -106,6 +106,7 @@
   window.pinCard = {
     createElement: createPinCardElement,
     renderElement: renderPinCard,
+    close: closePinCard,
   };
 
 })();
