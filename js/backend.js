@@ -54,7 +54,7 @@
     xhr.send();
   };
 
-  var errorHandler = function (errorMessage) {
+  var onLoadError = function (errorMessage) {
     var node = document.createElement('div');
     node.style = 'z-index: 100; margin: 0 auto; text-align: center; background-color: red;';
     node.style.position = 'absolute';
@@ -70,7 +70,7 @@
   window.backend = {
     save: save,
     load: load,
-    errorHandler: errorHandler,
+    onLoadError: onLoadError,
   };
 
 })();
