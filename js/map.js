@@ -8,7 +8,7 @@
   var mapFilter = document.querySelector('.map__filters');
 
   var onLoadSucces = function (data) {
-    var pinsList = window.filtres.type(data);
+    var pinsList = window.filtres(data);
     window.pin.render(pinsList);
   };
 
@@ -27,10 +27,10 @@
     window.backend.load(onLoadSucces, window.backend.onLoadError);
   };
 
-  var onTypeFilterClick = function () {
+  var onTypeFilterClick = window.debounce(function () {
     hidePins();
     window.backend.load(onLoadSucces, window.backend.onLoadError);
-  };
+  });
 
   mapFilter.addEventListener('change', onTypeFilterClick);
 
