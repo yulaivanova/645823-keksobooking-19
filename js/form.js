@@ -105,6 +105,7 @@
   window.form = {
     updateAddressInput: updateAddressInput,
     disableElements: disableElements,
+    addressInput: adFromAddressInput,
   };
 
 })();

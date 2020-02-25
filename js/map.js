@@ -15,8 +15,9 @@
   var hidePins = function () {
     var mapPins = map.querySelectorAll(('.map__pin:not(.map__pin--main)'));
     mapPins.forEach(function (pin) {
-      pin.style.display = 'none';
+      pin.remove();
     });
+    window.pinCard.close();
   };
 
   var makePageActive = function () {
@@ -28,7 +29,6 @@
 
   var onTypeFilterClick = function () {
     hidePins();
-    window.pinCard.close();
     window.backend.load(onLoadSucces, window.backend.onLoadError);
   };
 

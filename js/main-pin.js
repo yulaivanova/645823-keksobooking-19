@@ -3,7 +3,6 @@
 (function () {
   var MIN_Y = 130;
   var MAX_Y = 630;
-  var KEY_ENTER = 'Enter';
 
   var map = document.querySelector('.map');
   var mapPinMain = map.querySelector('.map__pin--main');
@@ -21,16 +20,6 @@
   var isValidY = function (y) {
     return y >= MIN_Y && y <= MAX_Y;
   };
-
-  mapPinMain.addEventListener('click', function () {
-    window.map.makePageActive();
-  });
-
-  mapPinMain.addEventListener('keydown', function (evt) {
-    if (evt.keyCode === KEY_ENTER) {
-      window.map.makePageActive();
-    }
-  });
 
   mapPinMain.addEventListener('mousedown', function (evt) {
     evt.preventDefault();
@@ -59,7 +48,6 @@
         mapPinMain.style.top = (mapPinMain.offsetTop - shift.y) + 'px';
         mapPinMain.style.left = (mapPinMain.offsetLeft - shift.x) + 'px';
         window.form.updateAddressInput(window.form.addressInput, true);
-
         startCoords = {
           x: moveEvt.clientX,
           y: moveEvt.clientY
