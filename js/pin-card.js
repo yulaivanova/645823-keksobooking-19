@@ -30,8 +30,12 @@
 
   var getPinCapacityText = function (pin) {
     var rooms = pin.offer.rooms + ' ' + window.util.declension(pin.offer.rooms, ['комната', 'комнаты', 'комнат']);
-    var guests = pin.offer.guests + ' ' + window.util.declension(pin.offer.guests, ['гостя', 'гостей']);
-    return rooms + ' для ' + guests;
+    var guests = pin.offer.guests + ' ' + window.util.declension(pin.offer.guests, ['гостя', 'гостей', 'гостей']);
+    if (pin.offer.rooms > 0 && pin.offer.guests > 0) {
+      return rooms + ' для ' + guests;
+    } else {
+      return '';
+    }
   };
 
   var createFeaturesPinCard = function (pin) {
