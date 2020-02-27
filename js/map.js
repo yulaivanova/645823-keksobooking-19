@@ -8,7 +8,7 @@
   var mapFilter = document.querySelector('.map__filters');
 
   var onLoadSucces = function (data) {
-    var pinsList = window.filtres(data);
+    var pinsList = window.filtres.map(data);
     window.pin.render(pinsList);
   };
 

@@ -3,6 +3,7 @@
 (function () {
   var map = document.querySelector('.map');
   var adForm = document.querySelector('.ad-form');
+  var adFormInputs = adForm.querySelectorAll('.ad-form input');
   var adFormRoomNumber = adForm.querySelector('#room_number');
   var adFormCapacity = adForm.querySelector('#capacity');
   var adFormPriceInput = adForm.querySelector('#price');
@@ -61,10 +62,21 @@
     });
   };
 
+  var inputValidation = function () {
+    adFormInputs.forEach(function (input) {
+      if (input.checkValidity() === false) {
+        input.style.border = '1px solid red';
+      } else {
+        input.style.border = '';
+      }
+    });
+  };
+
   adForm.addEventListener('change', function () {
     adFormCapacity.setCustomValidity(getMessageValidityCapacity());
     adFormPriceInput.setCustomValidity(getMessageValidityPrice());
     checkInOutValidation();
+    inputValidation();
   });
 
   var toogleFormElements = function (formElements, state) {
@@ -77,6 +89,9 @@
     disableElements(true);
     window.map.hidePins();
     adForm.reset();
+    window.mainPin.element.style.left = 570 + 'px';
+    window.mainPin.element.style.top = 375 + 'px';
+    window.filtres.reset();
     map.classList.add('map--faded');
     adForm.classList.add('ad-form--disabled');
     window.messages.showSuccess();

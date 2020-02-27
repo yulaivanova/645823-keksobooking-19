@@ -1,8 +1,6 @@
 'use strict';
 
 (function () {
-  // var DEBOUNCE_INTERVAL = 500;
-  // var timeout = null;
 
   var mapFilter = document.querySelector('.map__filters');
   var housingType = mapFilter.querySelector('#housing-type');
@@ -42,6 +40,20 @@
     return pins;
   };
 
-  window.filtres = filter;
+  var resetFiltres = function () {
+    housingType.value = 'any';
+    housingPrice.value = 'any';
+    housingRooms.value = 'any';
+    housingGuests.value = 'any';
+    var checkboxesInput = mapFilter.querySelectorAll('.map__checkbox:checked');
+    checkboxesInput.forEach(function (checkbox) {
+      checkbox.checked = false;
+    });
+  };
+
+  window.filtres = {
+    map: filter,
+    reset: resetFiltres,
+  };
 
 })();

@@ -81,6 +81,7 @@
 
   window.mainPin = {
     getAddres: getAddres,
+    element: mapPinMain,
   };
 
 })();
