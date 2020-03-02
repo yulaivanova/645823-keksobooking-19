@@ -24,12 +24,12 @@
     map.classList.remove('map--faded');
     adForm.classList.remove('ad-form--disabled');
     window.form.disableElements(false);
-    window.backend.load(onLoadSucces, window.backend.onLoadError);
+    window.backend.load('', onLoadSucces, window.backend.onLoadError);
   };
 
   var onTypeFilterClick = window.debounce(function () {
     hidePins();
-    window.backend.load(onLoadSucces, window.backend.onLoadError);
+    window.backend.load('', onLoadSucces, window.backend.onLoadError);
   });
 
   mapFilter.addEventListener('change', onTypeFilterClick);

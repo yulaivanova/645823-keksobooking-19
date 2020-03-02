@@ -1,7 +1,7 @@
 'use strict';
 
 (function () {
-  var MIN_Y = 130;
+  var MIN_Y = 115;
   var MAX_Y = 630;
 
   var map = document.querySelector('.map');
