@@ -41,7 +41,7 @@
     var price = parseInt(adFormPriceInput.value, 10);
     var type = adFormTypeInput.value;
 
-    if ((type === 'flat' && price >= 1000) || (type === 'house' && price >= 5000) || (type === 'palace' && price >= 10000)) {
+    if ((type === 'bungalo' && price < 1000) || (type === 'flat' && price >= 1000) || (type === 'house' && price >= 5000) || (type === 'palace' && price >= 10000)) {
       return '';
     } else if (type === 'flat' && price < 1000) {
       return 'Для квартиры минимальная цена за ночь 1 000';
@@ -57,19 +57,19 @@
 
     switch (type) {
       case 'flat':
-        adFormPriceInput.value = 1000;
+        adFormPriceInput.placeholder = 1000;
         break;
 
       case 'house':
-        adFormPriceInput.value = 5000;
+        adFormPriceInput.placeholder = 5000;
         break;
 
       case 'palace':
-        adFormPriceInput.value = 10000;
+        adFormPriceInput.placeholder = 10000;
         break;
 
       case 'bungalo':
-        adFormPriceInput.value = 0;
+        adFormPriceInput.placeholder = 0;
         break;
     }
   };
