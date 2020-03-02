@@ -3,6 +3,7 @@
 (function () {
   var map = document.querySelector('.map');
   var adForm = document.querySelector('.ad-form');
+  var adFormInputs = adForm.querySelectorAll('.ad-form input');
   var adFormRoomNumber = adForm.querySelector('#room_number');
   var adFormCapacity = adForm.querySelector('#capacity');
   var adFormPriceInput = adForm.querySelector('#price');
@@ -26,7 +27,7 @@
   var getMessageValidityCapacity = function () {
     var roomNumber = parseInt(adFormRoomNumber.value, 10);
     var capacity = parseInt(adFormCapacity.value, 10);
-    if ((roomNumber >= capacity && roomNumber !== 100) || (roomNumber === 100 && capacity === 0)) {
+    if ((roomNumber >= capacity && roomNumber !== 100 && capacity !== 0) || (roomNumber === 100 && capacity === 0)) {
       return '';
     } else if (roomNumber === 100 && capacity !== 0) {
       return 'Для 100 комнат вы должны выбрать вариант "Не для гостей"';
@@ -51,6 +52,28 @@
     }
   };
 
+  var priceValidation = function () {
+    var type = adFormTypeInput.value;
+
+    switch (type) {
+      case 'flat':
+        adFormPriceInput.value = 1000;
+        break;
+
+      case 'house':
+        adFormPriceInput.value = 5000;
+        break;
+
+      case 'palace':
+        adFormPriceInput.value = 10000;
+        break;
+
+      case 'bungalo':
+        adFormPriceInput.value = 0;
+        break;
+    }
+  };
+
   var checkInOutValidation = function () {
     adFormCheckInInput.addEventListener('change', function () {
       adFormCheckOutInput.value = adFormCheckInInput.value;
@@ -61,10 +84,22 @@
     });
   };
 
+  var inputValidation = function () {
+    adFormInputs.forEach(function (input) {
+      if (input.checkValidity() === false) {
+        input.style.border = '1px solid red';
+      } else {
+        input.style.border = '';
+      }
+    });
+  };
+
   adForm.addEventListener('change', function () {
     adFormCapacity.setCustomValidity(getMessageValidityCapacity());
     adFormPriceInput.setCustomValidity(getMessageValidityPrice());
     checkInOutValidation();
+    priceValidation();
+    inputValidation();
   });
 
   var toogleFormElements = function (formElements, state) {
@@ -77,6 +112,10 @@
     disableElements(true);
     window.map.hidePins();
     adForm.reset();
+    window.mainPin.element.style.left = 570 + 'px';
+    window.mainPin.element.style.top = 375 + 'px';
+    window.form.updateAddressInput(window.form.addressInput, true);
+    window.filtres.reset();
     map.classList.add('map--faded');
     adForm.classList.add('ad-form--disabled');
     window.messages.showSuccess();
