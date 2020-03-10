@@ -3,6 +3,10 @@
 (function () {
   var MIN_Y = 115;
   var MAX_Y = 630;
+  var MAIN_PIN = {
+    x: 570,
+    y: 375,
+  };
 
   var map = document.querySelector('.map');
   var mapPinMain = map.querySelector('.map__pin--main');
@@ -79,9 +83,14 @@
 
   });
 
+  var mainPinReset = function () {
+    mapPinMain.style.left = MAIN_PIN.x + 'px';
+    mapPinMain.style.top = MAIN_PIN.y + 'px';
+  };
+
   window.mainPin = {
     getAddres: getAddres,
-    element: mapPinMain,
+    reset: mainPinReset,
   };
 
 })();

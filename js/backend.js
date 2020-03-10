@@ -1,19 +1,20 @@
 'use strict';
 
 (function () {
-  var URL_UPLOAD = 'https://js.dump.academy/keksobooking/';
-  var URL_LOAD = 'https://js.dump.academy/keksobooking/data';
-  var StatusCode = {
-    OK: 200
+  var Url = {
+    LOAD: 'https://js.dump.academy/keksobooking/data',
+    UPLOAD: 'https://js.dump.academy/keksobooking/'
   };
+
+  var SUCCESS_STATUS_CODE = 200;
   var TIMEOUT_IN_MS = 10000;
 
-  var request = function (url, data, onLoad, onError) {
+  var request = function (url, onLoad, onError, data) {
     var xhr = new XMLHttpRequest();
     xhr.responseType = 'json';
 
     xhr.addEventListener('load', function () {
-      if (xhr.status === StatusCode.OK) {
+      if (xhr.status === SUCCESS_STATUS_CODE) {
         onLoad(xhr.response);
       } else {
         onError('Статус ответа: ' + xhr.status + ' ' + xhr.statusText);
@@ -27,41 +28,28 @@
     });
     xhr.timeout = TIMEOUT_IN_MS;
 
-    if (data === '') {
-      xhr.open('GET', url);
-      xhr.send();
-    } else {
-      xhr.open('POST', url);
-      xhr.send(data);
-    }
+    var method = data ? 'POST' : 'GET';
 
+    xhr.open(method, url);
+    xhr.send(data);
   };
 
-  var save = function (onLoad, onError) {
-    request(URL_UPLOAD, onLoad, onError);
+  var save = function (data, onLoad, onError) {
+    request(Url.UPLOAD, onLoad, onError, data);
   };
 
-  var load = function (onLoad, onError) {
-    request(URL_LOAD, onLoad, onError);
+  var load = function (onLoad) {
+    request(Url.LOAD, onLoad, onLoadError);
   };
 
-  var onLoadError = function (errorMessage) {
-    var node = document.createElement('div');
-    node.style = 'z-index: 100; margin: 0 auto; text-align: center; background-color: red;';
-    node.style.position = 'absolute';
-    node.style.left = 0;
-    node.style.right = 0;
-    node.style.fontSize = '30px';
-
-    node.textContent = errorMessage;
-    document.body.insertAdjacentElement('afterbegin', node);
+  var onLoadError = function () {
+    window.messages.showTimeError();
   };
 
 
   window.backend = {
     save: save,
-    load: load,
-    onLoadError: onLoadError,
+    load: load
   };
 
 })();

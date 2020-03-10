@@ -14,7 +14,6 @@
     .querySelector('.map__card');
 
   var photoCardTemplate = mapCardTemplate.querySelector('.popup__photo');
-  var mapFilters = document.querySelector('.map__filters-container');
   var map = document.querySelector('.map');
 
   var pinCardElement = null;
@@ -96,8 +95,8 @@
 
   var renderPinCard = function (pin) {
     closePinCard();
-    pinCardElement = window.pinCard.createElement(pin);
-    map.insertBefore(pinCardElement, mapFilters);
+    pinCardElement = createPinCardElement(pin);
+    map.insertAdjacentElement('beforeend', pinCardElement);
 
     var pinCardCloseButton = map.querySelector('.popup__close');
     pinCardCloseButton.addEventListener('click', function () {
@@ -108,8 +107,7 @@
   };
 
   window.pinCard = {
-    createElement: createPinCardElement,
-    renderElement: renderPinCard,
+    render: renderPinCard,
     close: closePinCard,
   };
 
