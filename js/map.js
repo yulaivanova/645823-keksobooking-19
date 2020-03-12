@@ -36,6 +36,7 @@
     window.filters.reset();
     window.mainPin.reset();
     window.form.updateAddressInput(window.form.addressInput, true);
+    window.photoUpload.default();
     map.classList.add('map--faded');
     adForm.classList.add('ad-form--disabled');
   };

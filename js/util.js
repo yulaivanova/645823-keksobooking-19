@@ -4,7 +4,7 @@
   var PIN_MAIN_WIDTH = 65;
   var PIN_MAIN_HEIGHT = 65;
   var PIN_MAIN_ARROW = 16;
-  var DEBOUNCE_INTERVAL = 500; // ms
+  var DEBOUNCE_INTERVAL = 500;
 
   var debounce = function (cb, interval) {
     var lastTimeout = null;
