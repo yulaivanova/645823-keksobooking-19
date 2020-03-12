@@ -1,7 +1,6 @@
 'use strict';
 
 (function () {
-  var map = document.querySelector('.map');
   var adForm = document.querySelector('.ad-form');
   var adFormInputs = adForm.querySelectorAll('.ad-form input');
   var adFormRoomNumber = adForm.querySelector('#room_number');
@@ -11,13 +10,7 @@
   var adFormCheckInInput = adForm.querySelector('#timein');
   var adFormCheckOutInput = adForm.querySelector('#timeout');
   var adFromAddressInput = adForm.querySelector('#address');
-  var adFormFieldsets = adForm.querySelectorAll('.ad-form fieldset');
   var adformResetButton = adForm.querySelector('.ad-form__reset');
-  var mapFiltersContainer = map.querySelector('.map__filters-container');
-
-  var mapFormInputs = mapFiltersContainer.querySelectorAll('.map__filters-container input');
-  var mapFormSelects = mapFiltersContainer.querySelectorAll('.map__filters-container select');
-
 
   var updateAddressInput = function (addressInput, isActive) {
     addressInput.value = window.mainPin.getAddres(isActive);
@@ -41,14 +34,14 @@
     var price = parseInt(adFormPriceInput.value, 10);
     var type = adFormTypeInput.value;
 
-    if ((type === 'bungalo' && price < 1000) || (type === 'flat' && price >= 1000) || (type === 'house' && price >= 5000) || (type === 'palace' && price >= 10000)) {
-      return '';
-    } else if (type === 'flat' && price < 1000) {
+    if (type === 'flat' && price < 1000) {
       return 'Для квартиры минимальная цена за ночь 1 000';
     } else if (type === 'house' && price < 5000) {
       return 'Для дома минимальная цена за ночь 5 000';
-    } else {
+    } else if (type === 'palace' && price < 10000) {
       return 'Для дворца минимальная цена за ночь 10 000';
+    } else {
+      return '';
     }
   };
 
@@ -74,16 +67,6 @@
     }
   };
 
-  var checkInOutValidation = function () {
-    adFormCheckInInput.addEventListener('change', function () {
-      adFormCheckOutInput.value = adFormCheckInInput.value;
-    });
-
-    adFormCheckOutInput.addEventListener('change', function () {
-      adFormCheckInInput.value = adFormCheckOutInput.value;
-    });
-  };
-
   var inputValidation = function () {
     adFormInputs.forEach(function (input) {
       if (input.checkValidity() === false) {
@@ -94,36 +77,35 @@
     });
   };
 
-  adForm.addEventListener('change', function () {
-    adFormCapacity.setCustomValidity(getMessageValidityCapacity());
-    adFormPriceInput.setCustomValidity(getMessageValidityPrice());
-    checkInOutValidation();
-    priceValidation();
-    inputValidation();
-  });
-
-  var toogleFormElements = function (formElements, state) {
-    formElements.forEach(function (element) {
-      element.disabled = state;
-    });
+  var disableElements = function (state) {
+    window.util.toogleElements(adForm, state);
+    updateAddressInput(adFromAddressInput, !state);
   };
 
   var onSaveSuccess = function () {
-    disableElements(true);
-    window.map.hidePins();
-    adForm.reset();
-    window.mainPin.element.style.left = 570 + 'px';
-    window.mainPin.element.style.top = 375 + 'px';
-    window.form.updateAddressInput(window.form.addressInput, true);
-    window.filtres.reset();
-    map.classList.add('map--faded');
-    adForm.classList.add('ad-form--disabled');
+    window.map.makePageNotActive();
     window.messages.showSuccess();
   };
 
   var onSaveError = function () {
     window.messages.showError();
+    inputValidation();
   };
+
+  adForm.addEventListener('change', function () {
+    adFormCapacity.setCustomValidity(getMessageValidityCapacity());
+    adFormPriceInput.setCustomValidity(getMessageValidityPrice());
+    priceValidation();
+    inputValidation();
+  });
+
+  adFormCheckInInput.addEventListener('change', function () {
+    adFormCheckOutInput.value = adFormCheckInInput.value;
+  });
+
+  adFormCheckOutInput.addEventListener('change', function () {
+    adFormCheckInInput.value = adFormCheckOutInput.value;
+  });
 
   adForm.addEventListener('submit', function (evt) {
     window.backend.save(new FormData(adForm), onSaveSuccess, onSaveError);
@@ -131,15 +113,8 @@
   });
 
   adformResetButton.addEventListener('click', function () {
-    adForm.reset();
+    window.map.makePageNotActive();
   });
-
-  var disableElements = function (state) {
-    toogleFormElements(mapFormInputs, state);
-    toogleFormElements(mapFormSelects, state);
-    toogleFormElements(adFormFieldsets, state);
-    updateAddressInput(adFromAddressInput, !state);
-  };
 
   window.form = {
     updateAddressInput: updateAddressInput,

@@ -4,6 +4,31 @@
   var PIN_MAIN_WIDTH = 65;
   var PIN_MAIN_HEIGHT = 65;
   var PIN_MAIN_ARROW = 16;
+  var DEBOUNCE_INTERVAL = 500; // ms
+
+  var debounce = function (cb, interval) {
+    var lastTimeout = null;
+
+    if (!interval) {
+      interval = DEBOUNCE_INTERVAL;
+    }
+
+    return function () {
+      var parameters = arguments;
+      if (lastTimeout) {
+        window.clearTimeout(lastTimeout);
+      }
+      lastTimeout = window.setTimeout(function () {
+        cb.apply(null, parameters);
+      }, interval);
+    };
+  };
+
+  var toogleElements = function (elements, state) {
+    Array.prototype.forEach.call(elements, function (element) {
+      element.disabled = state;
+    });
+  };
 
   var declension = function (number, words) {
     var cases = [2, 0, 1, 1, 1, 2];
@@ -16,16 +41,6 @@
             : 5
         ]
     ];
-  };
-
-  var getRandomIntInclusive = function (min, max) {
-    min = Math.ceil(min);
-    max = Math.floor(max);
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-  };
-
-  var getRandomElement = function (elements) {
-    return elements[getRandomIntInclusive(0, elements.length - 1)];
   };
 
   var getPinX = function (left) {
@@ -42,10 +57,10 @@
 
   window.util = {
     declension: declension,
-    getRandomIntInclusive: getRandomIntInclusive,
-    getRandomElement: getRandomElement,
     getPinX: getPinX,
     getPinY: getPinY,
+    debounce: debounce,
+    toogleElements: toogleElements,
   };
 
 })();

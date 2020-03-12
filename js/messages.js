@@ -3,6 +3,9 @@
 (function () {
   var errorMessage = null;
   var successMessage = null;
+  var timeErrorMessage = null;
+  var errorButton = null;
+  var ESC_KEY = 'Escape';
 
   var main = document.querySelector('main');
 
@@ -11,6 +14,10 @@
   .querySelector('.success');
 
   var errorMessageTemplate = document.querySelector('#error')
+  .content
+  .querySelector('.error');
+
+  var timeErrorMessageTemplate = document.querySelector('#time-error')
   .content
   .querySelector('.error');
 
@@ -28,14 +35,30 @@
     document.addEventListener('click', closeMessage);
   };
 
+  var showTimeErrorMessage = function () {
+    timeErrorMessage = timeErrorMessageTemplate.cloneNode(true);
+    main.appendChild(timeErrorMessage);
+    errorButton = document.querySelector('.error__button');
+    errorButton.addEventListener('click', onErrorButtonPress);
+    document.addEventListener('keydown', onTimeErrorMessageEscPress);
+  };
+
   var closeMessage = function () {
     if (errorMessage) {
       errorMessage.remove();
-    } else {
+    } else if (successMessage) {
       successMessage.remove();
+    } else {
+      timeErrorMessage.remove();
     }
+
     document.removeEventListener('keydown', onMessagePress);
     document.removeEventListener('click', closeMessage);
+
+    if (errorButton) {
+      errorButton.removeEventListener('click', onErrorButtonPress);
+      document.removeEventListener('keydown', onTimeErrorMessageEscPress);
+    }
   };
 
   var onMessagePress = function (evt) {
@@ -44,9 +67,22 @@
     }
   };
 
+  var onErrorButtonPress = function () {
+    closeMessage();
+    window.map.makePageActive();
+  };
+
+  var onTimeErrorMessageEscPress = function (evt) {
+    if (evt.key === ESC_KEY) {
+      closeMessage();
+      window.map.makePageNotActive();
+    }
+  };
+
   window.messages = {
     showSuccess: showSuccessMessage,
     showError: showErrorMessage,
+    showTimeError: showTimeErrorMessage,
   };
 
 })();
