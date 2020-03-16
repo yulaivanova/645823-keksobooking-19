@@ -36,11 +36,11 @@
     return isAny(value) || (data >= price[value].min && data < price[value].max);
   };
 
-  var isFeatures = function (data, featureElements) {
+  var isFeatures = function (data, features) {
     var is = true;
 
-    for (var i = 0; i < featureElements.length; i++) {
-      var element = featureElements[i];
+    for (var i = 0; i < features.length; i++) {
+      var element = features[i];
       if (!element.checked) {
         continue;
       }

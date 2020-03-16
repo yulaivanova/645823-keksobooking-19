@@ -7,7 +7,7 @@
     WIDTH: 70,
     BORDER_RADIUS: '5px'
   };
-  var photoElement = null;
+  var photo = null;
 
   var avatarChooser = document.querySelector('.ad-form__field input[type=file]');
   var avatarPreview = document.querySelector('.ad-form-header__avatar');
@@ -49,15 +49,15 @@
 
       reader.addEventListener('load', function () {
         var img = document.createElement('img');
-        photoElement = photoPreview.cloneNode(true);
+        photo = photoPreview.cloneNode(true);
         img.src = reader.result;
         img.height = ImgProperty.HEIGHT;
         img.width = ImgProperty.WIDTH;
         img.style.borderRadius = ImgProperty.BORDER_RADIUS;
 
-        photoElement.appendChild(img);
+        photo.appendChild(img);
         photoPreview.remove();
-        photoContainer.appendChild(photoElement);
+        photoContainer.appendChild(photo);
       });
 
       reader.readAsDataURL(file);
@@ -67,7 +67,7 @@
   var resetPhotos = function () {
     avatarImg.src = 'img/muffin-grey.svg';
 
-    if (photoElement) {
+    if (photo) {
       photoContainer.querySelectorAll('.ad-form__photo').forEach(function (element) {
         element.remove();
       });

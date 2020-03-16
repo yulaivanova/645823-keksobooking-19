@@ -16,7 +16,7 @@
   var photoCardTemplate = mapCardTemplate.querySelector('.popup__photo');
   var map = document.querySelector('.map');
 
-  var pinCardElement = null;
+  var pinCard = null;
 
 
   var getPinTypeText = function (pin) {
@@ -41,10 +41,10 @@
     var featuresFragment = document.createDocumentFragment();
 
     pin.offer.features.forEach(function (feature) {
-      var featureElement = document.createElement('li');
-      featureElement.classList.add('popup__feature');
-      featureElement.classList.add('popup__feature--' + feature);
-      featuresFragment.appendChild(featureElement);
+      var featureItem = document.createElement('li');
+      featureItem.classList.add('popup__feature');
+      featureItem.classList.add('popup__feature--' + feature);
+      featuresFragment.appendChild(featureItem);
     });
 
     return featuresFragment;
@@ -54,30 +54,30 @@
     var photosFragment = document.createDocumentFragment();
 
     pin.offer.photos.forEach(function (photo) {
-      var photoElement = photoCardTemplate.cloneNode(true);
-      photoElement.src = photo;
-      photosFragment.appendChild(photoElement);
+      var photoItem = photoCardTemplate.cloneNode(true);
+      photoItem.src = photo;
+      photosFragment.appendChild(photoItem);
     });
 
     return photosFragment;
   };
 
-  var createPinCardElement = function (pin) {
-    var cardElement = mapCardTemplate.cloneNode(true);
+  var createPinCard = function (pin) {
+    var card = mapCardTemplate.cloneNode(true);
 
-    cardElement.querySelector('.popup__title').textContent = pin.offer.title;
-    cardElement.querySelector('.popup__text--address').textContent = pin.offer.addres;
-    cardElement.querySelector('.popup__text--price').textContent = pin.offer.price + '₽/ночь';
-    cardElement.querySelector('.popup__type').textContent = getPinTypeText(pin);
-    cardElement.querySelector('.popup__text--capacity').textContent = getPinCapacityText(pin);
-    cardElement.querySelector('.popup__text--time').textContent = getPinTimeText(pin);
-    cardElement.querySelector('.popup__features').appendChild(createFeaturesPinCard(pin));
-    cardElement.querySelector('.popup__description').textContent = pin.offer.description;
-    cardElement.querySelector('.popup__photos').innerHTML = '';
-    cardElement.querySelector('.popup__photos').appendChild(createPhotosPinCard(pin));
-    cardElement.querySelector('.popup__avatar').src = pin.author.avatar;
+    card.querySelector('.popup__title').textContent = pin.offer.title;
+    card.querySelector('.popup__text--address').textContent = pin.offer.addres;
+    card.querySelector('.popup__text--price').textContent = pin.offer.price + '₽/ночь';
+    card.querySelector('.popup__type').textContent = getPinTypeText(pin);
+    card.querySelector('.popup__text--capacity').textContent = getPinCapacityText(pin);
+    card.querySelector('.popup__text--time').textContent = getPinTimeText(pin);
+    card.querySelector('.popup__features').appendChild(createFeaturesPinCard(pin));
+    card.querySelector('.popup__description').textContent = pin.offer.description;
+    card.querySelector('.popup__photos').innerHTML = '';
+    card.querySelector('.popup__photos').appendChild(createPhotosPinCard(pin));
+    card.querySelector('.popup__avatar').src = pin.author.avatar;
 
-    return cardElement;
+    return card;
   };
 
   var onPinCardEscPress = function (evt) {
@@ -87,16 +87,16 @@
   };
 
   var closePinCard = function () {
-    if (pinCardElement) {
-      pinCardElement.remove();
+    if (pinCard) {
+      pinCard.remove();
       document.removeEventListener('keydown', onPinCardEscPress);
     }
   };
 
   var renderPinCard = function (pin) {
     closePinCard();
-    pinCardElement = createPinCardElement(pin);
-    map.insertAdjacentElement('beforeend', pinCardElement);
+    pinCard = createPinCard(pin);
+    map.insertAdjacentElement('beforeend', pinCard);
 
     var pinCardCloseButton = map.querySelector('.popup__close');
     pinCardCloseButton.addEventListener('click', function () {
