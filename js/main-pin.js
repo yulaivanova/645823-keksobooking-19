@@ -1,9 +1,10 @@
 'use strict';
 
 (function () {
-  var MIN_Y = 115;
-  var MAX_Y = 630;
-  var MAIN_PIN = {
+  var MIN_Y = 81;
+  var MAX_Y = 582;
+
+  var mainPin = {
     x: 570,
     y: 375,
   };
@@ -14,7 +15,7 @@
 
   var getAddres = function (isActive) {
     return Math.round(window.util.getPinX(parseInt(mapPinMain.style.left, 10))) +
-     ' ,' + Math.round(window.util.getPinY(parseInt(mapPinMain.style.top, 10), isActive));
+     ', ' + Math.round(window.util.getPinY(parseInt(mapPinMain.style.top, 10), isActive));
   };
 
   var isValidX = function (x) {
@@ -24,6 +25,14 @@
   var isValidY = function (y) {
     return y >= MIN_Y && y <= MAX_Y;
   };
+
+  var onMainPinPressEnter = function (evt) {
+    if (window.util.isEnter(evt)) {
+      window.map.makePageActive();
+    }
+  };
+
+  mapPinMain.addEventListener('keydown', onMainPinPressEnter);
 
   mapPinMain.addEventListener('mousedown', function (evt) {
     evt.preventDefault();
@@ -74,7 +83,11 @@
         mapPinMain.addEventListener('click', onClickPreventDefault);
       }
 
-      window.map.makePageActive();
+      var activePin = document.querySelector('.map__pin--active');
+
+      if (!activePin) {
+        window.map.makePageActive();
+      }
 
     };
 
@@ -84,8 +97,8 @@
   });
 
   var mainPinReset = function () {
-    mapPinMain.style.left = MAIN_PIN.x + 'px';
-    mapPinMain.style.top = MAIN_PIN.y + 'px';
+    mapPinMain.style.left = mainPin.x + 'px';
+    mapPinMain.style.top = mainPin.y + 'px';
   };
 
   window.mainPin = {

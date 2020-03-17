@@ -1,7 +1,6 @@
 'use strict';
 
 (function () {
-
   var mapFilter = document.querySelector('.map__filters');
 
   var housingType = mapFilter.elements['housing-type'];
@@ -36,11 +35,11 @@
     return isAny(value) || (data >= price[value].min && data < price[value].max);
   };
 
-  var isFeatures = function (data, featureElements) {
+  var isFeatures = function (data, features) {
     var is = true;
 
-    for (var i = 0; i < featureElements.length; i++) {
-      var element = featureElements[i];
+    for (var i = 0; i < features.length; i++) {
+      var element = features[i];
       if (!element.checked) {
         continue;
       }
@@ -57,29 +56,41 @@
     return true;
   };
 
+  var isOffer = function (data) {
+    return !!data.offer;
+  };
+
   var filter = function (pins) {
-    pins = pins.filter(function (pin) {
-      return isType(pin.offer.type, housingType.value)
-        && isPrice(pin.offer.price, housingPrice.value)
-        && isNumber(pin.offer.rooms, housingRooms.value)
-        && isNumber(pin.offer.guests, housingGuests.value)
-        && isFeatures(pin.offer.features, housingFeatures.elements);
-    });
-    return pins;
+    var filteredPins = [];
+    for (var i = 0; i < pins.length; i++) {
+      var pin = pins[i];
+      if (isType(pin.offer.type, housingType.value)
+          && isPrice(pin.offer.price, housingPrice.value)
+          && isNumber(pin.offer.rooms, housingRooms.value)
+          && isNumber(pin.offer.guests, housingGuests.value)
+          && isFeatures(pin.offer.features, housingFeatures.elements)
+          && isOffer(pin)) {
+        filteredPins.push(pins[i]);
+      }
+      if (filteredPins.length === window.pin.quantity) {
+        break;
+      }
+    }
+    return filteredPins;
   };
 
   var resetFilters = function () {
     mapFilter.reset();
   };
 
-  var desableFilters = function (state) {
+  var disableFilters = function (state) {
     window.util.toogleElements(mapFilter, state);
   };
 
   window.filters = {
     process: filter,
     reset: resetFilters,
-    desableElements: desableFilters,
+    disable: disableFilters,
   };
 
 })();

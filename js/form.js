@@ -1,8 +1,16 @@
 'use strict';
 
 (function () {
+  // Это не перечисление, это маппинг
+  var PRICE_TYPE = {
+    flat: 1000,
+    bungalo: 0,
+    palace: 10000,
+    house: 5000,
+  };
+
   var adForm = document.querySelector('.ad-form');
-  var adFormInputs = adForm.querySelectorAll('.ad-form input');
+  var adFormFields = adForm.elements;
   var adFormRoomNumber = adForm.querySelector('#room_number');
   var adFormCapacity = adForm.querySelector('#capacity');
   var adFormPriceInput = adForm.querySelector('#price');
@@ -25,8 +33,11 @@
     } else if (roomNumber === 100 && capacity !== 0) {
       return 'Для 100 комнат вы должны выбрать вариант "Не для гостей"';
     } else {
-      return roomNumber + window.util.declension(roomNumber, [' комната', ' комнаты', ' комнат']) + window.util.declension(roomNumber,
-          [' подходит', ' подходят']) + ' только для ' + roomNumber + window.util.declension(roomNumber, [' гостя', ' гостей']);
+      var declinedRooms = window.util.declension(roomNumber, [' комната', ' комнаты', ' комнат']);
+      var declinedGuests = window.util.declension(roomNumber, [' гостя', ' гостей']);
+      var declinedMatch = window.util.declension(roomNumber, [' подходит', ' подходят']);
+
+      return roomNumber + declinedRooms + declinedMatch + ' только для ' + roomNumber + declinedGuests;
     }
   };
 
@@ -34,11 +45,11 @@
     var price = parseInt(adFormPriceInput.value, 10);
     var type = adFormTypeInput.value;
 
-    if (type === 'flat' && price < 1000) {
+    if (type === 'flat' && price < PRICE_TYPE[type]) {
       return 'Для квартиры минимальная цена за ночь 1 000';
-    } else if (type === 'house' && price < 5000) {
+    } else if (type === 'house' && price < PRICE_TYPE[type]) {
       return 'Для дома минимальная цена за ночь 5 000';
-    } else if (type === 'palace' && price < 10000) {
+    } else if (type === 'palace' && price < PRICE_TYPE[type]) {
       return 'Для дворца минимальная цена за ночь 10 000';
     } else {
       return '';
@@ -47,37 +58,28 @@
 
   var priceValidation = function () {
     var type = adFormTypeInput.value;
-
-    switch (type) {
-      case 'flat':
-        adFormPriceInput.placeholder = 1000;
-        break;
-
-      case 'house':
-        adFormPriceInput.placeholder = 5000;
-        break;
-
-      case 'palace':
-        adFormPriceInput.placeholder = 10000;
-        break;
-
-      case 'bungalo':
-        adFormPriceInput.placeholder = 0;
-        break;
-    }
+    adFormPriceInput.placeholder = PRICE_TYPE[type];
   };
 
   var inputValidation = function () {
-    adFormInputs.forEach(function (input) {
-      if (input.checkValidity() === false) {
-        input.style.border = '1px solid red';
+    Array.prototype.forEach.call(adFormFields, function (field) {
+      if (!field.checkValidity()) {
+        addInvalidOnField(field);
       } else {
-        input.style.border = '';
+        removeInvalidOnField(field);
       }
     });
   };
 
-  var disableElements = function (state) {
+  var removeInvalidOnField = function (field) {
+    field.parentNode.classList.remove('ad-form__element--invalid');
+  };
+
+  var addInvalidOnField = function (field) {
+    field.parentNode.classList.add('ad-form__element--invalid');
+  };
+
+  var disable = function (state) {
     window.util.toogleElements(adForm, state);
     updateAddressInput(adFromAddressInput, !state);
   };
@@ -85,6 +87,7 @@
   var onSaveSuccess = function () {
     window.map.makePageNotActive();
     window.messages.showSuccess();
+    priceValidation();
   };
 
   var onSaveError = function () {
@@ -114,11 +117,14 @@
 
   adformResetButton.addEventListener('click', function () {
     window.map.makePageNotActive();
+    Array.prototype.forEach.call(adFormFields, function (field) {
+      removeInvalidOnField(field);
+    });
   });
 
   window.form = {
     updateAddressInput: updateAddressInput,
-    disableElements: disableElements,
+    disableElements: disable,
     addressInput: adFromAddressInput,
   };
 

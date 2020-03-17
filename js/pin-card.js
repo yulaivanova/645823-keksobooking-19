@@ -1,7 +1,7 @@
 'use strict';
 
 (function () {
-  var ESC_KEY = 'Escape';
+  // Это не перечисление, это маппинг
   var HOUSE_TYPE = {
     flat: 'Квартира',
     bungalo: 'Бунгало',
@@ -16,7 +16,7 @@
   var photoCardTemplate = mapCardTemplate.querySelector('.popup__photo');
   var map = document.querySelector('.map');
 
-  var pinCardElement = null;
+  var pinCard = null;
 
 
   var getPinTypeText = function (pin) {
@@ -24,13 +24,15 @@
   };
 
   var getPinTimeText = function (pin) {
-    return 'Заезд после ' + pin.offer.checkin + ', выезд до ' + pin.offer.checkout;
+    return pin.offer.checkin && pin.offer.checkout
+      ? 'Заезд после ' + pin.offer.checkin + ', выезд до ' + pin.offer.checkout
+      : '';
   };
 
   var getPinCapacityText = function (pin) {
     var rooms = pin.offer.rooms + ' ' + window.util.declension(pin.offer.rooms, ['комната', 'комнаты', 'комнат']);
     var guests = pin.offer.guests + ' ' + window.util.declension(pin.offer.guests, ['гостя', 'гостей', 'гостей']);
-    if (pin.offer.rooms > 0 && pin.offer.guests > 0) {
+    if (pin.offer.rooms >= 0 && pin.offer.guests >= 0) {
       return rooms + ' для ' + guests;
     } else {
       return '';
@@ -38,69 +40,104 @@
   };
 
   var createFeaturesPinCard = function (pin) {
-    var featuresFragment = document.createDocumentFragment();
+    if (pin.offer.features && pin.offer.features.length) {
+      var featuresFragment = document.createDocumentFragment();
 
-    pin.offer.features.forEach(function (feature) {
-      var featureElement = document.createElement('li');
-      featureElement.classList.add('popup__feature');
-      featureElement.classList.add('popup__feature--' + feature);
-      featuresFragment.appendChild(featureElement);
-    });
+      pin.offer.features.forEach(function (feature) {
+        var featureItem = document.createElement('li');
+        featureItem.classList.add('popup__feature');
+        featureItem.classList.add('popup__feature--' + feature);
+        featuresFragment.appendChild(featureItem);
+      });
 
-    return featuresFragment;
+      return featuresFragment;
+    } else {
+      return '';
+    }
   };
 
   var createPhotosPinCard = function (pin) {
-    var photosFragment = document.createDocumentFragment();
+    if (pin.offer.photos && pin.offer.photos.length) {
+      var photosFragment = document.createDocumentFragment();
 
-    pin.offer.photos.forEach(function (photo) {
-      var photoElement = photoCardTemplate.cloneNode(true);
-      photoElement.src = photo;
-      photosFragment.appendChild(photoElement);
-    });
+      pin.offer.photos.forEach(function (photo) {
+        var photoItem = photoCardTemplate.cloneNode(true);
+        photoItem.src = photo;
+        photosFragment.appendChild(photoItem);
+      });
 
-    return photosFragment;
+      return photosFragment;
+    } else {
+      return '';
+    }
   };
 
-  var createPinCardElement = function (pin) {
-    var cardElement = mapCardTemplate.cloneNode(true);
+  var isRender = function (value, element, onRender) {
+    if (value || value === 0) {
+      return onRender(element, value);
+    }
+    return element.remove();
+  };
 
-    cardElement.querySelector('.popup__title').textContent = pin.offer.title;
-    cardElement.querySelector('.popup__text--address').textContent = pin.offer.addres;
-    cardElement.querySelector('.popup__text--price').textContent = pin.offer.price + '₽/ночь';
-    cardElement.querySelector('.popup__type').textContent = getPinTypeText(pin);
-    cardElement.querySelector('.popup__text--capacity').textContent = getPinCapacityText(pin);
-    cardElement.querySelector('.popup__text--time').textContent = getPinTimeText(pin);
-    cardElement.querySelector('.popup__features').appendChild(createFeaturesPinCard(pin));
-    cardElement.querySelector('.popup__description').textContent = pin.offer.description;
-    cardElement.querySelector('.popup__photos').innerHTML = '';
-    cardElement.querySelector('.popup__photos').appendChild(createPhotosPinCard(pin));
-    cardElement.querySelector('.popup__avatar').src = pin.author.avatar;
+  var createPinCard = function (pin) {
+    var card = mapCardTemplate.cloneNode(true);
 
-    return cardElement;
+    var onRenderTextContent = function (element, value) {
+      element.textContent = value;
+    };
+
+    var onRenderAppendChild = function (element, value) {
+      element.appendChild(value);
+    };
+
+    isRender(pin.offer.title, card.querySelector('.popup__title'), onRenderTextContent);
+    isRender(pin.offer.addres, card.querySelector('.popup__text--address'), onRenderTextContent);
+    isRender(pin.offer.price + '₽/ночь', card.querySelector('.popup__text--price'), onRenderTextContent);
+    isRender(getPinTypeText(pin), card.querySelector('.popup__type'), onRenderTextContent);
+    isRender(getPinCapacityText(pin), card.querySelector('.popup__text--capacity'), onRenderTextContent);
+    isRender(getPinTimeText(pin), card.querySelector('.popup__text--time'), onRenderTextContent);
+    isRender(pin.offer.description, card.querySelector('.popup__description'), onRenderTextContent);
+    isRender(createFeaturesPinCard(pin), card.querySelector('.popup__features'), onRenderAppendChild);
+    removeChildren(card.querySelector('.popup__photos'));
+    isRender(createPhotosPinCard(pin), card.querySelector('.popup__photos'), onRenderAppendChild);
+    if (pin.author.avatar) {
+      card.querySelector('.popup__avatar').src = pin.author.avatar;
+    }
+
+    return card;
+  };
+
+
+  var removeChildren = function (element) {
+    while (element.firstChild) {
+      element.removeChild(element.firstChild);
+    }
   };
 
   var onPinCardEscPress = function (evt) {
-    if (evt.key === ESC_KEY) {
+    if (window.util.isEsc(evt)) {
       closePinCard();
+      window.pin.disable();
     }
   };
 
   var closePinCard = function () {
-    if (pinCardElement) {
-      pinCardElement.remove();
+    if (pinCard) {
+      pinCard.remove();
       document.removeEventListener('keydown', onPinCardEscPress);
     }
   };
 
   var renderPinCard = function (pin) {
     closePinCard();
-    pinCardElement = createPinCardElement(pin);
-    map.insertAdjacentElement('beforeend', pinCardElement);
+    pinCard = createPinCard(pin);
+    map.insertAdjacentElement('beforeend', pinCard);
 
     var pinCardCloseButton = map.querySelector('.popup__close');
+
     pinCardCloseButton.addEventListener('click', function () {
       closePinCard();
+      window.pin.disable();
     });
 
     document.addEventListener('keydown', onPinCardEscPress);

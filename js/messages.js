@@ -5,7 +5,6 @@
   var successMessage = null;
   var timeErrorMessage = null;
   var errorButton = null;
-  var ESC_KEY = 'Escape';
 
   var main = document.querySelector('main');
 
@@ -73,7 +72,7 @@
   };
 
   var onTimeErrorMessageEscPress = function (evt) {
-    if (evt.key === ESC_KEY) {
+    if (window.util.isEsc(evt)) {
       closeMessage();
       window.map.makePageNotActive();
     }
