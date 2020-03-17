@@ -1,13 +1,13 @@
 'use strict';
 
 (function () {
-  var MIN_Y = 130;
-  var MAX_Y = 630;
+  var MIN_Y = 81;
+  var MAX_Y = 582;
+
   var mainPin = {
     x: 570,
     y: 375,
   };
-  var ENTER_KEY = 'Enter';
 
   var map = document.querySelector('.map');
   var mapPinMain = map.querySelector('.map__pin--main');
@@ -27,7 +27,7 @@
   };
 
   var onMainPinPressEnter = function (evt) {
-    if (evt.key === ENTER_KEY) {
+    if (window.util.isEnter(evt)) {
       window.map.makePageActive();
     }
   };
@@ -83,7 +83,11 @@
         mapPinMain.addEventListener('click', onClickPreventDefault);
       }
 
-      window.map.makePageActive();
+      var activePin = document.querySelector('.map__pin--active');
+
+      if (!activePin) {
+        window.map.makePageActive();
+      }
 
     };
 

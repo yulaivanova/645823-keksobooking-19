@@ -51,7 +51,7 @@
 
     var fragment = document.createDocumentFragment();
     var pinsCopy = pins.slice();
-    pinsCopy.length = (pinsCopy.length > PIN_QUANTITY) ? PIN_QUANTITY : pinsCopy.length;
+    pinsCopy.length = PIN_QUANTITY;
 
     pinsCopy.forEach(function (pin) {
       var element = createPin(pin);
@@ -81,7 +81,7 @@
     render: renderPins,
     remove: removePins,
     quantity: PIN_QUANTITY,
-    desable: makePinNotActive,
+    disable: makePinNotActive,
   };
 
 })();

@@ -1,6 +1,7 @@
 'use strict';
 
 (function () {
+  // Это не перечисление, это маппинг
   var PRICE_TYPE = {
     flat: 1000,
     bungalo: 0,

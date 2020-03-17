@@ -76,7 +76,7 @@
   };
 
   window.photoUpload = {
-    default: resetPhotos,
+    reset: resetPhotos,
   };
 
 })();

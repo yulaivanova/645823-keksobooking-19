@@ -56,14 +56,20 @@
     return true;
   };
 
+  var isOffer = function (data) {
+    return !!data.offer;
+  };
+
   var filter = function (pins) {
     var filteredPins = [];
     for (var i = 0; i < pins.length; i++) {
-      if (isType(pins[i].offer.type, housingType.value)
-          && isPrice(pins[i].offer.price, housingPrice.value)
-          && isNumber(pins[i].offer.rooms, housingRooms.value)
-          && isNumber(pins[i].offer.guests, housingGuests.value)
-          && isFeatures(pins[i].offer.features, housingFeatures.elements)) {
+      var pin = pins[i];
+      if (isType(pin.offer.type, housingType.value)
+          && isPrice(pin.offer.price, housingPrice.value)
+          && isNumber(pin.offer.rooms, housingRooms.value)
+          && isNumber(pin.offer.guests, housingGuests.value)
+          && isFeatures(pin.offer.features, housingFeatures.elements)
+          && isOffer(pin)) {
         filteredPins.push(pins[i]);
       }
       if (filteredPins.length === window.pin.quantity) {
@@ -77,14 +83,14 @@
     mapFilter.reset();
   };
 
-  var desableFilters = function (state) {
+  var disableFilters = function (state) {
     window.util.toogleElements(mapFilter, state);
   };
 
   window.filters = {
     process: filter,
     reset: resetFilters,
-    desableElements: desableFilters,
+    disable: disableFilters,
   };
 
 })();

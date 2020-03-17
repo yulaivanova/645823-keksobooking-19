@@ -1,9 +1,7 @@
 'use strict';
 
 (function () {
-
   var map = document.querySelector('.map');
-
   var adForm = document.querySelector('.ad-form');
   var mapFilter = document.querySelector('.map__filters');
 
@@ -23,7 +21,7 @@
     map.classList.remove('map--faded');
     adForm.classList.remove('ad-form--disabled');
     window.form.disableElements(false);
-    window.filters.desableElements(false);
+    window.filters.disable(false);
     window.backend.load(onLoadSucces);
   };
 
@@ -31,12 +29,12 @@
     window.pin.remove();
     window.pinCard.close();
     window.form.disableElements(true);
-    window.filters.desableElements(true);
+    window.filters.disable(true);
     adForm.reset();
     window.filters.reset();
     window.mainPin.reset();
     window.form.updateAddressInput(window.form.addressInput, true);
-    window.photoUpload.default();
+    window.photoUpload.reset();
     map.classList.add('map--faded');
     adForm.classList.add('ad-form--disabled');
   };
@@ -49,7 +47,7 @@
   mapFilter.addEventListener('change', onFilterClick);
 
   window.form.disableElements(true);
-  window.filters.desableElements(true);
+  window.filters.disable(true);
 
   window.map = {
     makePageActive: makePageActive,

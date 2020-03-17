@@ -5,6 +5,8 @@
   var PIN_MAIN_HEIGHT = 65;
   var PIN_MAIN_ARROW = 16;
   var DEBOUNCE_INTERVAL = 500;
+  var ESC_KEY = 'Escape';
+  var ENTER_KEY = 'Enter';
 
   var debounce = function (cb, interval) {
     var lastTimeout = null;
@@ -55,12 +57,22 @@
     }
   };
 
+  var isEsc = function (evt) {
+    return evt.key === ESC_KEY;
+  };
+
+  var isEnter = function (evt) {
+    return evt.key === ENTER_KEY;
+  };
+
   window.util = {
     declension: declension,
     getPinX: getPinX,
     getPinY: getPinY,
     debounce: debounce,
     toogleElements: toogleElements,
+    isEsc: isEsc,
+    isEnter: isEnter,
   };
 
 })();
