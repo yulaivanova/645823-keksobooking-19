@@ -91,7 +91,7 @@
     };
 
     isRender(pin.offer.title, card.querySelector('.popup__title'), onRenderTextContent);
-    isRender(pin.offer.addres, card.querySelector('.popup__text--address'), onRenderTextContent);
+    isRender(pin.offer.address, card.querySelector('.popup__text--address'), onRenderTextContent);
     isRender(pin.offer.price + '₽/ночь', card.querySelector('.popup__text--price'), onRenderTextContent);
     isRender(getPinTypeText(pin), card.querySelector('.popup__type'), onRenderTextContent);
     isRender(getPinCapacityText(pin), card.querySelector('.popup__text--capacity'), onRenderTextContent);
