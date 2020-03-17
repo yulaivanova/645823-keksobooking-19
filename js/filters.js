@@ -1,7 +1,6 @@
 'use strict';
 
 (function () {
-
   var mapFilter = document.querySelector('.map__filters');
 
   var housingType = mapFilter.elements['housing-type'];
@@ -58,14 +57,20 @@
   };
 
   var filter = function (pins) {
-    pins = pins.filter(function (pin) {
-      return isType(pin.offer.type, housingType.value)
-        && isPrice(pin.offer.price, housingPrice.value)
-        && isNumber(pin.offer.rooms, housingRooms.value)
-        && isNumber(pin.offer.guests, housingGuests.value)
-        && isFeatures(pin.offer.features, housingFeatures.elements);
-    });
-    return pins;
+    var filteredPins = [];
+    for (var i = 0; i < pins.length; i++) {
+      if (isType(pins[i].offer.type, housingType.value)
+          && isPrice(pins[i].offer.price, housingPrice.value)
+          && isNumber(pins[i].offer.rooms, housingRooms.value)
+          && isNumber(pins[i].offer.guests, housingGuests.value)
+          && isFeatures(pins[i].offer.features, housingFeatures.elements)) {
+        filteredPins.push(pins[i]);
+      }
+      if (filteredPins.length === window.pin.quantity) {
+        break;
+      }
+    }
+    return filteredPins;
   };
 
   var resetFilters = function () {

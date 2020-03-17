@@ -33,6 +33,16 @@
     mapPinImage.src = pin.author.avatar;
     mapPinImage.alt = pin.offer.title;
 
+    pinItem.addEventListener('click', function () {
+      if (!pinItem.classList.contains('map__pin--active')) {
+        var activePin = mapPinsList.querySelector('.map__pin--active');
+        if (activePin) {
+          activePin.classList.remove('map__pin--active');
+        }
+        pinItem.classList.add('map__pin--active');
+      }
+    });
+
     return pinItem;
   };
 
@@ -45,8 +55,8 @@
 
     pinsCopy.forEach(function (pin) {
       var element = createPin(pin);
-      var conPinClick = createClickOnPin(pin);
-      element.addEventListener('click', conPinClick);
+      var onPinClick = createClickOnPin(pin);
+      element.addEventListener('click', onPinClick);
       fragment.appendChild(element);
       renderedPins.push(element);
     });
@@ -62,9 +72,16 @@
     return onPinClick;
   };
 
+  var makePinNotActive = function () {
+    var activePin = document.querySelector('.map__pin--active');
+    activePin.classList.remove('map__pin--active');
+  };
+
   window.pin = {
     render: renderPins,
-    remove: removePins
+    remove: removePins,
+    quantity: PIN_QUANTITY,
+    desable: makePinNotActive,
   };
 
 })();

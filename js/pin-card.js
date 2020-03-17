@@ -30,7 +30,7 @@
   var getPinCapacityText = function (pin) {
     var rooms = pin.offer.rooms + ' ' + window.util.declension(pin.offer.rooms, ['комната', 'комнаты', 'комнат']);
     var guests = pin.offer.guests + ' ' + window.util.declension(pin.offer.guests, ['гостя', 'гостей', 'гостей']);
-    if (pin.offer.rooms > 0 && pin.offer.guests > 0) {
+    if (pin.offer.rooms >= 0 && pin.offer.guests >= 0) {
       return rooms + ' для ' + guests;
     } else {
       return '';
@@ -83,6 +83,7 @@
   var onPinCardEscPress = function (evt) {
     if (evt.key === ESC_KEY) {
       closePinCard();
+      window.pin.desable();
     }
   };
 
@@ -99,8 +100,10 @@
     map.insertAdjacentElement('beforeend', pinCard);
 
     var pinCardCloseButton = map.querySelector('.popup__close');
+
     pinCardCloseButton.addEventListener('click', function () {
       closePinCard();
+      window.pin.desable();
     });
 
     document.addEventListener('keydown', onPinCardEscPress);
