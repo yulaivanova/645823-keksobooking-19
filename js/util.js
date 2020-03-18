@@ -50,11 +50,7 @@
   };
 
   var getPinY = function (top, isActive) {
-    if (isActive) {
-      return PIN_MAIN_HEIGHT + top + PIN_MAIN_ARROW;
-    } else {
-      return PIN_MAIN_HEIGHT / 2 + top;
-    }
+    return isActive ? PIN_MAIN_HEIGHT + top + PIN_MAIN_ARROW : PIN_MAIN_HEIGHT / 2 + top;
   };
 
   var isEsc = function (evt) {

@@ -51,17 +51,17 @@
       return 'Для дома минимальная цена за ночь 5 000';
     } else if (type === 'palace' && price < PRICE_TYPE[type]) {
       return 'Для дворца минимальная цена за ночь 10 000';
-    } else {
-      return '';
     }
+
+    return '';
   };
 
-  var priceValidation = function () {
+  var validatePrice = function () {
     var type = adFormTypeInput.value;
     adFormPriceInput.placeholder = PRICE_TYPE[type];
   };
 
-  var inputValidation = function () {
+  var validateInput = function () {
     Array.prototype.forEach.call(adFormFields, function (field) {
       if (!field.checkValidity()) {
         addInvalidOnField(field);
@@ -87,19 +87,19 @@
   var onSaveSuccess = function () {
     window.map.makePageNotActive();
     window.messages.showSuccess();
-    priceValidation();
+    validatePrice();
   };
 
   var onSaveError = function () {
     window.messages.showError();
-    inputValidation();
+    validateInput();
   };
 
   adForm.addEventListener('change', function () {
     adFormCapacity.setCustomValidity(getMessageValidityCapacity());
     adFormPriceInput.setCustomValidity(getMessageValidityPrice());
-    priceValidation();
-    inputValidation();
+    validatePrice();
+    validateInput();
   });
 
   adFormCheckInInput.addEventListener('change', function () {

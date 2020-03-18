@@ -1,13 +1,13 @@
 'use strict';
 
 (function () {
+  var SUCCESS_STATUS_CODE = 200;
+  var TIMEOUT_IN_MS = 10000;
+
   var Url = {
     LOAD: 'https://js.dump.academy/keksobooking/data',
     UPLOAD: 'https://js.dump.academy/keksobooking/'
   };
-
-  var SUCCESS_STATUS_CODE = 200;
-  var TIMEOUT_IN_MS = 10000;
 
   var request = function (url, onLoad, onError, data) {
     var xhr = new XMLHttpRequest();

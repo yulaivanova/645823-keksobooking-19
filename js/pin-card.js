@@ -34,9 +34,9 @@
     var guests = pin.offer.guests + ' ' + window.util.declension(pin.offer.guests, ['гостя', 'гостей', 'гостей']);
     if (pin.offer.rooms >= 0 && pin.offer.guests >= 0) {
       return rooms + ' для ' + guests;
-    } else {
-      return '';
     }
+
+    return '';
   };
 
   var createFeaturesPinCard = function (pin) {
@@ -51,9 +51,9 @@
       });
 
       return featuresFragment;
-    } else {
-      return '';
     }
+
+    return '';
   };
 
   var createPhotosPinCard = function (pin) {
@@ -67,9 +67,9 @@
       });
 
       return photosFragment;
-    } else {
-      return '';
     }
+
+    return '';
   };
 
   var isRender = function (value, element, onRender) {

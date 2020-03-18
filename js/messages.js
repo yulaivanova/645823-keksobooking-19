@@ -24,14 +24,14 @@
     successMessage = successMessageTemplate.cloneNode(true);
     main.appendChild(successMessage);
     document.addEventListener('keydown', onMessagePress);
-    document.addEventListener('click', closeMessage);
+    document.addEventListener('click', onMessageClick);
   };
 
   var showErrorMessage = function () {
     errorMessage = errorMessageTemplate.cloneNode(true);
     main.appendChild(errorMessage);
     document.addEventListener('keydown', onMessagePress);
-    document.addEventListener('click', closeMessage);
+    document.addEventListener('click', onMessageClick);
   };
 
   var showTimeErrorMessage = function () {
@@ -52,12 +52,16 @@
     }
 
     document.removeEventListener('keydown', onMessagePress);
-    document.removeEventListener('click', closeMessage);
+    document.removeEventListener('click', onMessageClick);
 
     if (errorButton) {
       errorButton.removeEventListener('click', onErrorButtonPress);
       document.removeEventListener('keydown', onTimeErrorMessageEscPress);
     }
+  };
+
+  var onMessageClick = function () {
+    closeMessage();
   };
 
   var onMessagePress = function (evt) {
