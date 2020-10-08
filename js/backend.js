@@ -5,7 +5,7 @@
   var TIMEOUT_IN_MS = 10000;
 
   var Url = {
-    LOAD: 'https://js.dump.academy/keksobooking/data',
+    LOAD: 'database/database.json',
     UPLOAD: 'https://js.dump.academy/keksobooking/'
   };
 
